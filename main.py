@@ -4,21 +4,31 @@ from simhash import *
 import matplotlib.pyplot as plt
 from sklearn import manifold
 
+'''
 g = nx.read_edgelist("./graphs/karate.txt", comments='#', delimiter=' ', nodetype=int, create_using=nx.Graph())
 
 # Relabel nodes
 mapping = {node: str(nodeId) for nodeId, node in enumerate(g.nodes())}
 g = nx.relabel_nodes(G=g, mapping=mapping)
+'''
 
+graph_name = "citeseer_undirected"
+dim = 128
+suffix="_{}".format(dim)
+g = nx.read_gml("../datasets/{}.gml".format(graph_name))
+print("# cc: ", nx.number_connected_components(g))
 
+'''
 pos = nx.spring_layout(g)
 nx.draw(g, pos, with_labels=True)
 plt.show()
+'''
+
 
 degree_seq = [nx.degree(g, str(node)) for node in range(g.number_of_nodes())]
 
 
-dim = 128
+
 
 
 # Compute the signatures
@@ -28,9 +38,21 @@ for node in g.nodes():
     nb_list = [str(nb) for nb in nx.neighbors(g, node)]
     nb_list.append(str(node))  # add the node itself
     sigdict[int(node)] = SimHash(nb_list, dim=dim)
-    if node in ['7', '6', '17']:
-        print(nb_list)
+    print(type(sigdict[int(node)].input))
 
+def save_embeddings(output_filename, dim, embed_dict):
+    N = len(embed_dict.keys())
+    print(N)
+    with open(output_filename, 'w') as f:
+        f.write("{} {}\n".format(N, dim))
+        for node in range(N):
+            line = "{} {}\n".format(node, embed_dict[node].input)
+            f.write(line)
+
+
+save_embeddings("./embeddings/{}{}.embedding".format(graph_name, suffix), dim, sigdict)
+
+'''
 nndist = np.empty((g.number_of_nodes(), g.number_of_nodes()), dtype=float)
 for node1 in range(g.number_of_nodes()):
     for node2 in range(node1, g.number_of_nodes()):
@@ -62,4 +84,4 @@ ax.scatter(0, 0, color='black')
 plt.xlabel('dim 1')
 plt.ylabel('dim 2')
 plt.show()
-
+'''

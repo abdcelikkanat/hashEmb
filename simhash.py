@@ -12,7 +12,7 @@ def _hash_function(x):
 
 class SimHash():
 
-    def __init__(self, input, dim=64, hash_function=None):
+    def __init__(self, input, dim=128, hash_function=None):
         '''
 
         '''
