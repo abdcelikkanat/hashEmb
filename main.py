@@ -12,11 +12,15 @@ mapping = {node: str(nodeId) for nodeId, node in enumerate(g.nodes())}
 g = nx.relabel_nodes(G=g, mapping=mapping)
 '''
 
-graph_name = "citeseer_undirected"
 dim = 128
+''' '''
+
+graph_name = "cora_undirected"
+
 suffix="_{}".format(dim)
 g = nx.read_gml("../datasets/{}.gml".format(graph_name))
 print("# cc: ", nx.number_connected_components(g))
+
 
 '''
 pos = nx.spring_layout(g)
@@ -38,7 +42,22 @@ for node in g.nodes():
     nb_list = [str(nb) for nb in nx.neighbors(g, node)]
     nb_list.append(str(node))  # add the node itself
     sigdict[int(node)] = SimHash(nb_list, dim=dim)
-    print(type(sigdict[int(node)].input))
+
+
+'''
+f = sigdict[0].hamming_distance(sigdict[7])
+print("=: ", f)
+M = np.zeros(shape=(g.number_of_nodes(), dim), dtype=bool)
+for i in range(g.number_of_nodes()):
+    mask = [1<<d for d in range(dim)]
+    for d in range(dim):
+        if mask[d] & sigdict[i].input:
+            M[i, dim-d-1] = 1
+from scipy.spatial.distance import pdist
+from scipy.spatial.distance import squareform
+p = squareform(pdist(M, 'hamming'))*dim
+print(p[0, 7])
+'''
 
 def save_embeddings(output_filename, dim, embed_dict):
     N = len(embed_dict.keys())
@@ -46,7 +65,16 @@ def save_embeddings(output_filename, dim, embed_dict):
     with open(output_filename, 'w') as f:
         f.write("{} {}\n".format(N, dim))
         for node in range(N):
-            line = "{} {}\n".format(node, embed_dict[node].input)
+
+            mask = [1<<i for i in range(dim)]
+            num = ""
+            for i in range(dim):
+                if embed_dict[node].input & mask[i]:
+                    num = num + " 1"
+                else:
+                    num = num + " 0"
+
+            line = "{}{}\n".format(node, num)
             f.write(line)
 
 
