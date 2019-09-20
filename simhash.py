@@ -105,3 +105,14 @@ class SimHash():
                 sum |= self._masks[d]
 
         self.input = sum
+
+    def get_binary(self):
+
+        binary_repr = []
+        for d in range(self.dim):
+            if self.input & self._masks[self.dim - d - 1]:
+                binary_repr.append(1)
+            else:
+                binary_repr.append(0)
+
+        return binary_repr

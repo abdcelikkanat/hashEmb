@@ -3,9 +3,9 @@ from simhash import *
 from learn_embedding import *
 
 dim = 128
-filename = "blogcatalog"
+filename = "citeseer_undirected"
 graph_path="../datasets/{}.gml".format(filename)
-output_path="./embeddings/{}_{}.embedding".format(filename, dim)
+output_path="./embeddings/{}_{}_2hop.embedding".format(filename, dim)
 
 g = nx.read_gml(graph_path)
 le = LearnEmb(g, dim)
