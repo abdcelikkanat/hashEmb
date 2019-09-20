@@ -1,7 +1,7 @@
 from simhash import *
 import networkx as nx
 import numpy as np
-
+from random_walks import *
 
 class LearnEmb:
     def __init__(self, g, dim):
@@ -23,9 +23,18 @@ class LearnEmb:
                     if nb_nb not in self.nb_list[node]:
                         self.nb_list[node].append(str(nb_nb))
 
+    def _get_nblist_random_walks(self):
+
+        self.nb_list = [[] for _ in range(self.N)]
+
+        rw = RandomWalks(g=self.g, method='deepwalk', N=80, L=10)
+        for walk in rw.get_walks():
+            self.nb_list[int(walk[0])].extend(walk[1:])
+
     def get_signatures(self):
 
-        self._get_nblist()
+        #self._get_nblist()
+        self._get_nblist_random_walks()
 
         emb = np.zeros(shape=(self.N, self.dim), dtype=bool)
         masks = [1 << d for d in range(self.dim)]

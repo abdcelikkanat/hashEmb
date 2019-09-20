@@ -59,6 +59,7 @@ p = squareform(pdist(M, 'hamming'))*dim
 print(p[0, 7])
 '''
 
+
 def save_embeddings(output_filename, dim, embed_dict):
     N = len(embed_dict.keys())
     print(N)
