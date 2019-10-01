@@ -1,6 +1,7 @@
 import hashlib
 import numbers
 import collections
+from zlib import crc32
 
 
 def _hash_function(x):
