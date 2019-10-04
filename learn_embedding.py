@@ -33,10 +33,30 @@ class LearnEmb:
         for walk in rw.get_walks():
             self.nb_list[int(walk[0])].extend(walk[1:])
 
+    def _get_context_set(self):
+
+        self.nb_list = [[] for _ in range(self.N)]
+
+        window_size = 10
+        rw = RandomWalks(g=self.g, method='deepwalk', N=80, L=10)
+        for walk in rw.get_walks():
+            walk_len = len(walk)
+            for current_pos_inx in range(walk_len):
+
+                min_pos_inx = max(0, current_pos_inx-window_size)
+                max_pos_inx = min(walk_len, current_pos_inx+window_size)
+
+                for context_pos_inx in range(min_pos_inx, max_pos_inx):
+                    if context_pos_inx != current_pos_inx:
+                        self.nb_list[int(walk[current_pos_inx])].append(walk[context_pos_inx])
+
     def get_signatures(self):
 
-        self._get_ego(e=2)
+        #self._get_ego(e=2)
+        #self._get_ego(e=1)
         #self._get_nblist_random_walks()
+        self._get_context_set()
+
 
         emb = np.zeros(shape=(self.N, self.dim), dtype=bool)
         masks = [1 << d for d in range(self.dim)]
