@@ -49,7 +49,7 @@ class SimHash():
         if isinstance(features, dict):
             features = features.items()
         for f in features:
-            if isinstance(f, basestring):
+            if isinstance(f, str):
                 h = self.hash_function(f.encode('utf-8'))
                 w = 1
             else:
