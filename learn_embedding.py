@@ -53,9 +53,9 @@ class LearnEmb:
     def get_signatures(self):
 
         #self._get_ego(e=2)
-        #self._get_ego(e=1)
+        self._get_ego(e=1)
         #self._get_nblist_random_walks()
-        self._get_context_set()
+        #self._get_context_set()
 
 
         emb = np.zeros(shape=(self.N, self.dim), dtype=bool)

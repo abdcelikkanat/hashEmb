@@ -1,16 +1,26 @@
-import hashlib
-import random
+from simhash import *
+from scipy.spatial.distance import cdist
 
-x = "b"
+dim = 360
 
-f = hashlib.md5(x)
-print(int(f.hexdigest(), 16))
-f2 = hashlib.md5(x)
-print(int(f.hexdigest(), 16))
-h = hashlib.new('md5')
-h.update(x)
-print(int(h.hexdigest(), 16))
 
-m = hashlib.md5()
-m.update(x)
-print(int(m.hexdigest(), 16))
+
+
+
+
+
+
+
+
+
+sh1 = SimHash(['a', 'x', 'y'], dim=dim)
+b1 = sh1.get_binary()
+print(b1)
+sh2 = SimHash(['x', 'y', 'z'], dim=dim)
+b2 = sh2.get_binary()
+print(b2)
+
+
+print(sh1.hamming_distance(sh2)/float(dim))
+d = cdist([b1], [b2], metric='cosine')
+print(d)

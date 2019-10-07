@@ -31,6 +31,7 @@ class SimHash():
 
         if isinstance(input, numbers.Integral):
             self.input = input
+            raise ValueError("STOP!")
         elif isinstance(input, collections.Iterable):
             self.input = self.build_by_features(input)
         elif isinstance(input, SimHash):
