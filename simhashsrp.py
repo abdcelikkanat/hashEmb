@@ -86,7 +86,7 @@ class SimHashSRP:
 
         output = np.sign(np.dot(x, self.w.T))
 
-        output[output == -1] = 0
+        output[output == -1] += 1
 
         return output
 
