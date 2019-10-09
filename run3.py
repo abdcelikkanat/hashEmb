@@ -15,10 +15,10 @@ def _crc32_function(x):
     return crc32(x) & 0xffffffff
 
 
-dim = 1024
-filename = "citeseer_undirected"
+dim = 2048 #1024
+filename = "cora_undirected"
 graph_path="../datasets/{}.gml".format(filename)
-output_path="./embeddings/{}_ego_dim={}.embedding".format(filename, dim)
+output_path="./embeddings/{}_ego2_dim={}_weighted.embedding".format(filename, dim)
 
 g = nx.read_gml(graph_path)
 
@@ -27,8 +27,8 @@ for node in g.nodes():
     nb_list[int(node)].append(str(node))
     for nb in nx.neighbors(g, node):
         nb_list[int(node)].append(str(nb))
-        # for nb_nb in nx.neighbors(g, nb):
-        #     nb_list[int(node)].append(str(nb_nb))
+        for nb_nb in nx.neighbors(g, nb):
+            nb_list[int(node)].append(str(nb_nb))
 
 
 srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_function)
