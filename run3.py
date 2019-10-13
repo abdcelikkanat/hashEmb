@@ -18,7 +18,7 @@ def _crc32_function(x):
 dim = 1024
 filename = "citeseer_undirected"
 graph_path="../datasets/{}.gml".format(filename)
-output_path="./embeddings/{}_ego_dim={}.embedding".format(filename, dim)
+output_path="./embeddings/{}_rw_n=80_l=10_dim={}.embedding".format(filename, dim)
 
 g = nx.read_gml(graph_path)
 
@@ -30,7 +30,7 @@ nb_list = [[] for _ in range(g.number_of_nodes())]
 #         # for nb_nb in nx.neighbors(g, nb):
 #         #     nb_list[int(node)].append(str(nb_nb))
 
-rw = RandomWalks(g, method='deepwalk', N=1, L=10)
+rw = RandomWalks(g, method='deepwalk', N=80, L=10)
 walks = rw.get_walks()
 for walk in walks:
     nb_list[int(walk[0])].extend(walk)
@@ -41,6 +41,6 @@ srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_f
 
 emb = np.zeros(shape=(g.number_of_nodes(), dim), dtype=np.float)
 for node in g.nodes():
-    emb[int(node), :] = srp.encode(nb_list[int(node)])
+    emb[int(node), :] += srp.encode(nb_list[int(node)])
 
 save_emb(emb=emb, N=g.number_of_nodes(), dim=dim, outputname=output_path)
