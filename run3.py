@@ -23,12 +23,18 @@ output_path="./embeddings/{}_ego2_dim={}.embedding".format(filename, dim)
 g = nx.read_gml(graph_path)
 
 nb_list = [[] for _ in range(g.number_of_nodes())]
-for node in g.nodes():
-    nb_list[int(node)].append(str(node))
-    for nb in nx.neighbors(g, node):
-        nb_list[int(node)].append(str(nb))
-        for nb_nb in nx.neighbors(g, nb):
-            nb_list[int(node)].append(str(nb_nb))
+
+# for node in g.nodes():
+#     nb_list[int(node)].append(str(node))
+#     for nb in nx.neighbors(g, node):
+#         nb_list[int(node)].append(str(nb))
+#         # for nb_nb in nx.neighbors(g, nb):
+#         #     nb_list[int(node)].append(str(nb_nb))
+
+rw = RandomWalks(g, method='deepwalk', N=1, L=10)
+walks = rw.get_walks()
+for walk in walks:
+    nb_list[int(walk[0])].extend(walk)
 
 
 srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_function)
