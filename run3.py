@@ -47,11 +47,10 @@ for walk in walks:
 #for node in g.nodes():
 #    nb_list[int(node)] = list(set(nb_list[int(node)]))
 
-
 srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_function)
 
 emb = np.zeros(shape=(g.number_of_nodes(), dim), dtype=np.float)
 for node in g.nodes():
-    emb[int(node), :] += srp.encode(nb_list[int(node)])
+    emb[int(node), :] = srp.encode(nb_list[int(node)])
 
 save_emb(emb=emb, N=g.number_of_nodes(), dim=dim, outputname=output_path)
