@@ -15,26 +15,35 @@ def _crc32_function(x):
     return crc32(x) & 0xffffffff
 
 
-dim = 1024
-filename = "citeseer_undirected"
+dim = 4096
+filename = "cora_undirected"
 graph_path="../datasets/{}.gml".format(filename)
-output_path="./embeddings/{}_rw_n=80_l=10_dim={}.embedding".format(filename, dim)
+#output_path="./embeddings/{}_1ego_dim={}_yeni.embedding".format(filename, dim)
+output_path="./embeddings/{}_rw_n=10_l=3_dim={}_yeni.embedding".format(filename, dim)
+
 
 g = nx.read_gml(graph_path)
 
 nb_list = [[] for _ in range(g.number_of_nodes())]
-# for node in g.nodes():
-#     nb_list[int(node)].append(str(node))
-#     for nb in nx.neighbors(g, node):
-#         nb_list[int(node)].append(str(nb))
-#         # for nb_nb in nx.neighbors(g, nb):
-#         #     nb_list[int(node)].append(str(nb_nb))
 
-rw = RandomWalks(g, method='deepwalk', N=80, L=10)
+
+'''
+for node in g.nodes():
+    nb_list[int(node)].append(str(node))
+    for nb in nx.neighbors(g, node):
+        nb_list[int(node)].append(str(nb))
+        for nb_nb in nx.neighbors(g, nb):
+            nb_list[int(node)].append(str(nb_nb))
+
+'''
+rw = RandomWalks(g, method='deepwalk', N=10, L=3)
 walks = rw.get_walks()
 for walk in walks:
-    nb_list[int(walk[0])].extend(walk)
+    nb_list[int(walk[0])].extend(str(w) for w in walk)
 
+
+#for node in g.nodes():
+#    nb_list[int(node)] = list(set(nb_list[int(node)]))
 
 srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_function)
 

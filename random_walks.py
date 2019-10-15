@@ -31,7 +31,7 @@ class RandomWalks:
 
                 while len(walk) < self.L:
 
-                    nb_list = list(nx.neighbors(self.g, node))
+                    nb_list = list(nx.neighbors(self.g, walk[-1]))
                     nb = np.random.choice(a=nb_list, size=1)[0]
 
                     walk.append(nb)
