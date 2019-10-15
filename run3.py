@@ -19,7 +19,9 @@ dim = 4096
 filename = "cora_undirected"
 graph_path="../datasets/{}.gml".format(filename)
 #output_path="./embeddings/{}_1ego_dim={}_yeni.embedding".format(filename, dim)
-output_path="./embeddings/{}_rw_n=10_l=3_dim={}_yeni.embedding".format(filename, dim)
+N=10
+L=10
+output_path="./embeddings/{}_rw_n={}_l={}_dim={}_yeni.embedding".format(filename,str(N), str(L), dim)
 
 
 g = nx.read_gml(graph_path)
@@ -36,7 +38,7 @@ for node in g.nodes():
             nb_list[int(node)].append(str(nb_nb))
 
 '''
-rw = RandomWalks(g, method='deepwalk', N=10, L=3)
+rw = RandomWalks(g, method='deepwalk', N=N, L=L)
 walks = rw.get_walks()
 for walk in walks:
     nb_list[int(walk[0])].extend(str(w) for w in walk)
