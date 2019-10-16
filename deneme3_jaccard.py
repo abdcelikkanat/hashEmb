@@ -39,12 +39,12 @@ def get_nb_list(g):
     return nb_list
 
 g = nx.read_gml("../datasets/citeseer_undirected.gml")
-dim = 128
-rw = RandomWalks(g=g, method="deepwalk", N=1, L=11, opts={})
+dim = 256
+#rw = RandomWalks(g=g, method="deepwalk", N=1, L=11, opts={})
 mh = MinHash(hash_function=my_crc32_function)
 
-walks = rw.get_walks()
-#walks = get_nb_list(g)
+#walks = rw.get_walks()
+walks = get_nb_list(g)
 
 embeddings = {str(node): [] for node in range(g.number_of_nodes())}
 for d in range(dim):
@@ -59,4 +59,4 @@ plt.plot([embeddings[str(node)][0] for node in range(g.number_of_nodes())],
 plt.show()
 '''
 
-save_embeddings(file_path="./citeseer_undirected_minhash_rw_l=11.embedding", emb=embeddings)
+save_embeddings(file_path="./citeseer_undirected_minhash_1ego_{}.embedding".format(dim), emb=embeddings)
