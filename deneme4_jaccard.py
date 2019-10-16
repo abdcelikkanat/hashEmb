@@ -13,7 +13,10 @@ def my_hash_function(value):
         return float(crc32(value) & 0xffffffff) / 2 ** 32
 
 def my_crc32_function(x):
-    return crc32(x) & 0xffffffff
+    if isinstance(x, str):
+        return crc32(x.encode("utf-8")) & 0xffffffff
+    else:
+        return crc32(x) & 0xffffffff
 
 
 def save_embeddings(file_path, emb):
@@ -38,13 +41,19 @@ def get_nb_list(g):
 
     return nb_list
 
-g = nx.read_gml("../datasets/citeseer_undirected.gml")
-dim = 1
-rw = RandomWalks(g=g, method="deepwalk", N=128, L=5, opts={})
+dataset_name="citeseer_undirected"
+suffix="_1ego"
+
+g = nx.read_gml("../datasets/{}.gml".format(dataset_name))
+dim = 128
+rw = RandomWalks(g=g, method="deepwalk", N=1, L=7, opts={})
 mh = MinHash(hash_function=my_crc32_function)
 
-walks = rw.get_walks()
-#walks = get_nb_list(g)
+########## DIKKAT ###########
+#walks = rw.get_walks()
+walks = get_nb_list(g)
+########## DIKKAT ###########
+
 
 embeddings = {str(node): [] for node in range(g.number_of_nodes())}
 for d in range(dim):
@@ -52,7 +61,6 @@ for d in range(dim):
     for walk in walks:
         embeddings[walk[0]].append(mh.getMinHashCodeOf(values=walk[1:]))
 
-print(len(walks))
 
 '''
 plt.figure()
@@ -61,4 +69,4 @@ plt.plot([embeddings[str(node)][0] for node in range(g.number_of_nodes())],
 plt.show()
 '''
 
-save_embeddings(file_path="./citeseer_undirected_minhash_multiwalks.embedding", emb=embeddings)
+save_embeddings(file_path="./embeddings/{}_minhash{}.embedding".format(dataset_name, suffix), emb=embeddings)

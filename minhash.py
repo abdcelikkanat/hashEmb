@@ -3,20 +3,20 @@ import numbers
 import collections
 from zlib import crc32
 import numpy as np
-
+from inspect import isfunction
 
 _prime_number = 4294967311
 
 
-def _md5_function(x):
-    if isinstance(x, str):
-        return int(hashlib.md5(x.encode()).hexdigest(), 16)
-    else:
-        return int(hashlib.md5(x).hexdigest(), 16)
-
-
-def _crc32_function(x):
-    return crc32(x) & 0xffffffff
+#def _md5_function(x):
+#    if isinstance(x, str):
+#        return int(hashlib.md5(x.encode()).hexdigest(), 16)
+#    else:
+#        return int(hashlib.md5(x).hexdigest(), 16)
+#
+#
+#def _crc32_function(x):
+#    return crc32(x) & 0xffffffff
 
 
 class MinHash:
@@ -34,10 +34,10 @@ class MinHash:
 
         '''
 
-        if type(hash_function) == 'function':
+        if isfunction(hash_function):
             self.hash_function = hash_function
         else:
-            self.hash_function = _crc32_function
+            raise Exception("Invalid function type: {}".format(type(hash_function)))
 
         self.a = []
         self.b = []
