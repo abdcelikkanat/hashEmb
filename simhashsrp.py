@@ -8,6 +8,7 @@ import numbers
 import collections
 from zlib import crc32
 import numpy as np
+from scipy.stats import ortho_group
 
 
 def _md5_function(x):
@@ -31,7 +32,7 @@ class SimHashSRP:
 
     w = None
 
-    def __init__(self, vocab_size, dim, hash_function=None):
+    def __init__(self, vocab_size, dim, hash_function=None, hash_method="random-normal"):
         '''
 
         '''
@@ -43,9 +44,9 @@ class SimHashSRP:
 
         self.vocab_size = vocab_size
         self.dim = dim
-        self.renew_hash_function()
+        self.renew_hash_function(method=hash_method)
 
-    def renew_hash_function(self):
+    def renew_hash_function(self, method="random-normal"):
 
         # def _generate_coefficients(s):
         #
@@ -62,7 +63,13 @@ class SimHashSRP:
         # self.a.append(coefficients[0])
         # self.b.append(coefficients[1])
 
-        self.w = np.random.normal(loc=0.0, scale=1.0, size=(self.dim, self.vocab_size))
+        if method == "random-normal":
+            self.w = np.random.normal(loc=0.0, scale=1.0, size=(self.dim, self.vocab_size))
+        elif method == "orthogonal":
+            if self.vocab_size < self.dim:
+                raise ValueError("Vocabulary size ({}) is less than the dimension size ()!".format(self.vocab_size, self.dim))
+            self.w = ortho_group.rvs(self.vocab_size)
+            self.w = self.w[0:self.dim, :]
 
 
 
