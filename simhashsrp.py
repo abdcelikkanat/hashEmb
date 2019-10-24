@@ -67,7 +67,7 @@ class SimHashSRP:
             self.w = np.random.normal(loc=0.0, scale=1.0, size=(self.dim, self.vocab_size))
         elif method == "orthogonal":
             if self.vocab_size < self.dim:
-                raise ValueError("Vocabulary size ({}) is less than the dimension size ()!".format(self.vocab_size, self.dim))
+                raise ValueError("Vocabulary size ({}) is less than the dimension size ({})!".format(self.vocab_size, self.dim))
             self.w = ortho_group.rvs(self.vocab_size)
             self.w = self.w[0:self.dim, :]
 
