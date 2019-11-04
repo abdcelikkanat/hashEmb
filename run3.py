@@ -15,12 +15,12 @@ def _crc32_function(x):
     return crc32(x) & 0xffffffff
 
 
-dim = 4096
-filename = "cora_undirected"
+dim = 4096*2
+filename = "blogcatalog"
 graph_path="../datasets/{}.gml".format(filename)
-#output_path="./embeddings/{}_1ego_dim={}_yeni.embedding".format(filename, dim)
-N=10
-L=10
+#output_path="./embeddings/{}_2ego_dim={}_yeni.embedding".format(filename, dim)
+N=250
+L=2
 output_path="./embeddings/{}_rw_n={}_l={}_dim={}_yeni.embedding".format(filename,str(N), str(L), dim)
 
 
