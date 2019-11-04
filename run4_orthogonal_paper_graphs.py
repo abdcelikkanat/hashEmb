@@ -15,13 +15,13 @@ def _crc32_function(x):
     return crc32(x) & 0xffffffff
 
 
-dim = 3312 #4096//2
-filename = "citeseer_undirected"
-graph_path="../datasets/{}.gml".format(filename)
+dim = 4096//2
+filename = "dblp_new"
+graph_path="../NodeSketch/graphs/{}.gml".format(filename)
 #output_path="./embeddings/{}_2ego_dim={}_yeni.embedding".format(filename, dim)
-N=500
-L=10
-output_path="./embeddings/{}_rw_n={}_l={}_dim={}_yeni_orthogonal.embedding".format(filename,str(N), str(L), dim)
+N=50
+L=3
+output_path="./embeddings/{}_rw_n={}_l={}_dim={}_orthogonal_paper.embedding".format(filename,str(N), str(L), dim)
 
 
 g = nx.read_gml(graph_path)
