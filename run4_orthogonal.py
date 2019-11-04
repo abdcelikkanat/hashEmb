@@ -15,13 +15,13 @@ def _crc32_function(x):
     return crc32(x) & 0xffffffff
 
 
-dim = 4096*2
-filename = "blogcatalog"
+dim = 2708 #4096**2
+filename = "cora_undirected"
 graph_path="../datasets/{}.gml".format(filename)
-#output_path="./embeddings/{}_1ego_dim={}_yeni.embedding".format(filename, dim)
-N=150
-L=2
-output_path="./embeddings/{}_rw_n={}_l={}_dim={}_yeni.embedding".format(filename,str(N), str(L), dim)
+#output_path="./embeddings/{}_2ego_dim={}_yeni.embedding".format(filename, dim)
+N=100
+L=10
+output_path="./embeddings/{}_rw_n={}_l={}_dim={}_yeni_orthogonal.embedding".format(filename,str(N), str(L), dim)
 
 
 g = nx.read_gml(graph_path)
@@ -34,8 +34,8 @@ for node in g.nodes():
     nb_list[int(node)].append(str(node))
     for nb in nx.neighbors(g, node):
         nb_list[int(node)].append(str(nb))
-        #for nb_nb in nx.neighbors(g, nb):
-        #    nb_list[int(node)].append(str(nb_nb))
+        for nb_nb in nx.neighbors(g, nb):
+            nb_list[int(node)].append(str(nb_nb))
 
 '''
 rw = RandomWalks(g, method='deepwalk', N=N, L=L)
@@ -47,7 +47,7 @@ for walk in walks:
 #for node in g.nodes():
 #    nb_list[int(node)] = list(set(nb_list[int(node)]))
 
-srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_function)
+srp = SimHashSRP(dim=dim, vocab_size=g.number_of_nodes(), hash_function=_crc32_function, hash_method="orthogonal")
 
 emb = np.zeros(shape=(g.number_of_nodes(), dim), dtype=np.float)
 for node in g.nodes():
